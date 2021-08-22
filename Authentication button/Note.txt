@@ -1,0 +1,2 @@
+class based components: contextType ,using context API
+function based components: useContext() hooks
