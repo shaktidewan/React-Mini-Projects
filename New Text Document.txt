@@ -1,0 +1,285 @@
+import './App.css';
+// import Contact from './Components/Contact'
+
+import {useState} from 'react';
+
+function App() {
+  const [todos, setTodos] = useState([]);//empty array
+  //need state to keep track of th value in the input
+  const [todo,setTodo] = useState(""); 
+
+  const [isEditing, setIsEditing] = useState(false);
+  //object state to set so we should know which todo 
+  //item we are editing
+  const [currentTodo, setCurrentTodo] = useState({});
+  
+  const handleEditInputChange = e => {
+    setCurrentTodo({
+      ...currentTodo, 
+      text: e.target.value
+    });
+    console.log(currentTodo)
+  }
+
+  const handleEditClick = todo => {
+    // set editing to true
+    setIsEditing(true);
+    // set the currentTodo to the todo item that was clicked
+    setCurrentTodo({ ...todo });
+  }
+  const handleInputChange = e =>{
+    setTodo(e.target.value);
+  }
+
+  const handleUpdateTodo = (id,updatedTodo) =>{
+     // here we are mapping over the todos array - the idea is check if the todo.id matches the id we pass into the function
+    // if the id's match, use the second parameter to pass in the updated todo object
+    // otherwise just use old todo
+    const updatedItem = todos.map((todo) => {
+      return todo.id === id ? updatedTodo : todo;
+    });
+    // set editing to false because this function will be used inside a onSubmit function - which means the data was submited and we are no longer editing
+    setIsEditing(false);
+    // update the todos state with the updated todo
+    setTodos(updatedItem);
+  }
+
+  const handleEditFormSubmit =e =>{
+    e.preventDefault();
+
+    // call the handleUpdateTodo function - passing the currentTodo.id and the currentTodo object as arguments
+    handleUpdateTodo(currentTodo.id, currentTodo);
+  }
+
+  const handleFormSubmit = e => {
+    e.preventDefault();
+    if(todo !== ""){
+      setTodos([
+        ...todos,
+        {
+          //setting a basic id to identify the object
+          id: todos.length +1,
+          //set a text property to the value of the todo state and 
+          //trim the whitespace from the input
+          text: todo.trim()
+        }
+      ]);
+    }
+    console.log(todos);
+    //clearing the input box
+    setTodo("");
+  }
+
+  return (
+    <div className="App">
+      {/* <Contact /> */}
+
+      <h1>Todo App</h1>
+
+      {isEditing ? (
+        <form onSubmit={handleEditFormSubmit}>
+        <h1>Todo Edit</h1>
+          <input
+          name="Edit todo"
+          type="text"
+          placeholder="EDIT todo"
+          value={currentTodo.text}
+          onChange={handleEditInputChange}
+          />
+          <button type="submit">Update</button>
+          <button onClick={() => setIsEditing(false)}>Cancel</button>
+        </form>
+      ) : (
+        <form onSubmit={handleFormSubmit}>
+          {/* we've added an h2 element */}
+          <h2>Add Todo</h2>
+          {/* also added a label for the input */}
+          <label htmlFor="todo">Add todo: </label>
+          {/* notice that the value is still set to the todo state */}
+          {/* also notice the handleInputChange is still the same */}
+          <input
+            name="todo"
+            type="text"
+            placeholder="Create a new todo"
+            value={todo}
+            onChange={handleInputChange}
+          />
+          {/* here we just added a "Add" button element - use the type="submit" on the button which will still submit the form when clicked using the handleFormSubmit function */}
+          <button type="submit">Add</button>
+        </form>
+      )}
+      
+
+      <ul>
+        {todos.map((todo) =>(
+          <li key={todo.id}>{todo.text}
+          <button onClick={() => handleEditClick(todo)}>Edit</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import React,{useState} from 'react';
+
+const Contact = () => {
+    const [detail,setDetail] = useState([]);
+    const [name,setName] = useState('');
+    const [edit,setEdit] = useState(false);
+
+    const handleChange = (event) =>{
+        event.preventDefault();
+        setName(event.target.value)
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setDetail([...detail, name])
+    }
+
+    const deleteDetail = (id) => {
+        const list = [...detail];
+        list.splice(id,1);
+        setDetail(list);
+    }
+
+    const editHandler = (id) => {
+        const person = detail[id];
+        setName(person);
+        setEdit(prevState => !prevState.edit);
+    }
+
+
+    const editSubmit = (event) =>{
+        event.preventDefault();
+        let lists = [...detail];
+        let list = {...lists[1]};
+        list = name;
+        lists[1] = list;
+        setDetail([lists])
+        console.log(list);
+
+        const mapp = lists.map((data,id) => <li>{data}</li>)
+        return(
+            console.log(mapp)
+            // <div>{mapp}</div>
+        )
+    }
+
+    const names = detail.map((data,id) => <li key={id}>
+    {data} 
+    <button onClick={() => editHandler(id)}> Edit</button>
+    <button onClick={() => deleteDetail(id)}> Delete</button>
+    </li>)
+
+
+
+    return(
+        <div>
+            <form>
+                <label>
+                    Name:
+                    <input 
+                    type="text" 
+                    name="name" 
+                    value={name}
+                    onChange={handleChange}
+                    />
+                </label>
+                { edit ? 
+                <button 
+                onClick={editSubmit}
+                >EDIT</button> : 
+                <button 
+                onClick={handleSubmit}
+                >Submit</button>}
+            </form>  
+            {names}
+           {/* {detail.map((data,id) => <li>{data}</li>)} */}
+        </div>
+    );
+}
+
+export default Contact;
+
+
+
+===========================================================
+import "./styles.css";
+import { useState } from "react";
+
+export default function App() {
+  const [employeeData, setEmployeeData] = useState([]);
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+
+  const handleInputName = (e) => {
+    e.preventDefault();
+    setName(e.target.value);
+  };
+  const handleInputAge = (e) => {
+    e.preventDefault();
+    setAge(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setEmployeeData([...employeeData,  {
+      id: employeeData.length,
+      name: name, 
+      age: age
+    }
+  ]);
+  };
+
+  const names = employeeData.map((data,id) => <li key={id}>
+    {data.name} 
+    {data.age}
+    {data.id} 
+    <button > Edit</button>
+    <button> Delete</button>
+    </li>)
+  return (
+    <div className="App">
+      <h1>FORM</h1>
+      <form>
+        <label>Name: </label>
+        <input
+          name="Name"
+          value={name}
+          placeholder="Name"
+          onChange={handleInputName}
+        />
+        <label>Age: </label>
+        <input
+          name="Age"
+          value={age}
+          placeholder="Age"
+          onChange={handleInputAge}
+        />
+        <button onClick={handleSubmit}>Submit</button>
+      </form>
+      <h2>
+        {names}
+      </h2>
+    </div>
+  );
+}
+
