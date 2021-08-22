@@ -1,0 +1,15 @@
+//json configuration
+{
+    "presets": [
+        ["env", {
+            "targets": //broswer name
+            {
+                "browsers":[
+                    "> 1%",
+                    "last 2 versions"
+                ]
+            }
+        }],
+        "react"
+    ]
+}
