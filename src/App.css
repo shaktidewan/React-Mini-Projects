@@ -1,0 +1,15 @@
+.App {
+  text-align: center;
+}
+
+.cakes {
+  display: grid;
+}
+
+.cakes img {
+  width: 10%;
+}
+
+.cakes button{
+  margin-top: 0%;
+}
